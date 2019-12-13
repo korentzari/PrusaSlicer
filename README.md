@@ -1,57 +1,27 @@
 
 ![PrusaSlicer logo](/resources/icons/PrusaSlicer.png?raw=true)
 
-# PrusaSlicer
+# PrusaSlicer 2.1.1 DRIBBLING
 
+This is a Fork of the PrusaSlicer 2.1.1
 You may want to check the [PrusaSlicer project page](https://www.prusa3d.com/prusaslicer/).
+For information on PrusaSlicer check the [PrusaSlicer project page](https://www.prusa3d.com/prusaslicer/).
 Prebuilt Windows, OSX and Linux binaries are available through the [git releases page](https://github.com/prusa3d/PrusaSlicer/releases) or from the [Prusa3D downloads page](https://www.prusa3d.com/drivers/).
 
-PrusaSlicer takes 3D models (STL, OBJ, AMF) and converts them into G-code
-instructions for FFF printers or PNG layers for mSLA 3D printers. It's
-compatible with any modern printer based on the RepRap toolchain, including all
-those based on the Marlin, Prusa, Sprinter and Repetier firmware. It also works
-with Mach3, LinuxCNC and Machinekit controllers.
+### What are the PrusaSlicer's DRIBBLING features compared to the original PrusaSlicer?
 
-PrusaSlicer is based on [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranelucci and the RepRap community.
+On the Filament tab in Advanced group, in the Toolchange  parameters with single extruder MM printers, there are some additional parameters:
 
-See the [project homepage](https://www.prusa3d.com/slic3r-prusa-edition/) and
-the [documentation directory](doc/) for more information.
+- DRIBBLING MODE (on/off) -> if you do not enable dribbling mode, it works exactly as the standard PrusaSlicer.
+- Melting distance (do not change, probably will be hard coded for Prusa printers)
+- Number of Dribbling moves
 
-### What language is it written in?
+If Dribbling mode is enabled, during the MMU2S filament change, just before extracting the filament, it starts to play with the filament doing a sort of dribbling and each hit of the filament in the melting area shapes the head almost squared, limiting the strings and strange big balls shapes to the minimum. It is possible to vary the effect to tune it with the owned specific filament by changing the parameter 'Number of Dribbling moves'.
+I had developed it especially for PLA filaments, in order to use bad quality / low cost filaments spools.
+For the moment I decided to do not change the temperature, in order to keep print time short.
 
-All user facing code is written in C++, and some legacy code as well as unit
-tests are written in Perl. Perl is not required for either development or use
-of PrusaSlicer.
-
-The slicing core is the `libslic3r` library, which can be built and used in a standalone way.
-The command line interface is a thin wrapper over `libslic3r`.
-
-### What are PrusaSlicer's main features?
-
-Key features are:
-
-* **multi-platform** (Linux/Mac/Win) and packaged as standalone-app with no dependencies required
-* complete **command-line interface** to use it with no GUI
-* multi-material **(multiple extruders)** object printing
-* multiple G-code flavors supported (RepRap, Makerbot, Mach3, Machinekit etc.)
-* ability to plate **multiple objects having distinct print settings**
-* **multithread** processing
-* **STL auto-repair** (tolerance for broken models)
-* wide automated unit testing
-
-Other major features are:
-
-* combine infill every 'n' perimeters layer to speed up printing
-* **3D preview** (including multi-material files)
-* **multiple layer heights** in a single print
-* **spiral vase** mode for bumpless vases
-* fine-grained configuration of speed, acceleration, extrusion width
-* several infill patterns including honeycomb, spirals, Hilbert curves
-* support material, raft, brim, skirt
-* **standby temperature** and automatic wiping for multi-extruder printing
-* [customizable **G-code macros**](https://github.com/prusa3d/PrusaSlicer/wiki/Slic3r-Prusa-Edition-Macro-Language) and output filename with variable placeholders
-* support for **post-processing scripts**
-* **cooling logic** controlling fan speed and dynamic print speed
+See a close-up picture of some filament heads  I got during a MMU2 multicolour print.
+![heads](/heads.jpg?raw=true)
 
 ### Development
 
@@ -60,12 +30,6 @@ these documentation pages:
 * [Linux](doc/How%20to%20build%20-%20Linux%20et%20al.md)
 * [macOS](doc/How%20to%20build%20-%20Mac%20OS.md)
 * [Windows](doc/How%20to%20build%20-%20Windows.md)
-
-### Can I help?
-
-Sure! You can do the following to find things that are available to help with:
-* Add an [issue](https://github.com/prusa3d/PrusaSlicer/issues) to the github tracker if it isn't already present.
-* Look at [issues labeled "volunteer needed"](https://github.com/prusa3d/PrusaSlicer/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A%22volunteer+needed%22)
 
 ### What's PrusaSlicer license?
 

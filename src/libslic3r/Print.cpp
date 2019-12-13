@@ -189,6 +189,11 @@ bool Print::invalidate_state_by_config_options(const std::vector<t_config_option
             || opt_key == "filament_cooling_final_speed"
             || opt_key == "filament_ramming_parameters"
             || opt_key == "filament_max_volumetric_speed"
+            // dribbling
+            || opt_key == "filament_dribbling"          
+			      || opt_key == "dribbling_meltingzone"
+			      || opt_key == "dribbling_moves"
+			      // dribbling
             || opt_key == "gcode_flavor"
             || opt_key == "high_current_on_filament_swap"
             || opt_key == "infill_first"
