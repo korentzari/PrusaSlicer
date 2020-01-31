@@ -94,6 +94,10 @@ bool Print::invalidate_state_by_config_options(const std::vector<t_config_option
         "filament_density",
         "filament_notes",
         "filament_cost",
+// dribbling		
+		"filament_mintemp",
+		"filament_maxtemp",
+// dribbling		
         "first_layer_acceleration",
         "first_layer_bed_temperature",
         "first_layer_speed",
@@ -191,9 +195,10 @@ bool Print::invalidate_state_by_config_options(const std::vector<t_config_option
             || opt_key == "filament_max_volumetric_speed"
             // dribbling
             || opt_key == "filament_dribbling"          
-			      || opt_key == "dribbling_meltingzone"
-			      || opt_key == "dribbling_moves"
-			      // dribbling
+			|| opt_key == "dribbling_meltingzone"
+			|| opt_key == "dribbling_moves"
+			|| opt_key == "dribbling_temperature"			
+			// dribbling
             || opt_key == "gcode_flavor"
             || opt_key == "high_current_on_filament_swap"
             || opt_key == "infill_first"

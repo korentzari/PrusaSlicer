@@ -1,7 +1,7 @@
 
 ![PrusaSlicer logo](/resources/icons/PrusaSlicer.png?raw=true)
 
-# PrusaSlicer 2.1.1 DRIBBLING
+# PrusaSlicer 2.1.1 DRIBBLING V.B01
 
 This is a Fork of the PrusaSlicer 2.1.1
 You may want to check the [PrusaSlicer project page](https://www.prusa3d.com/prusaslicer/).

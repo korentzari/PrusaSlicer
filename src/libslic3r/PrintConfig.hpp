@@ -612,6 +612,10 @@ public:
     ConfigOptionStrings             filament_type;
     ConfigOptionBools               filament_soluble;
     ConfigOptionFloats              filament_cost;
+// dribbling
+	ConfigOptionInts				filament_mintemp;
+	ConfigOptionInts				filament_maxtemp;
+// dribbling	
     ConfigOptionFloats              filament_max_volumetric_speed;
     ConfigOptionFloats              filament_loading_speed;
     ConfigOptionFloats              filament_loading_speed_start;
@@ -626,9 +630,10 @@ public:
     ConfigOptionFloats              filament_cooling_final_speed;
     ConfigOptionStrings             filament_ramming_parameters;    
 // dribbling    
-	  ConfigOptionBools               filament_dribbling;
-	  ConfigOptionFloats							dribbling_meltingzone;
-	  ConfigOptionInts								dribbling_moves;
+	ConfigOptionBools             	filament_dribbling;
+	ConfigOptionFloats				dribbling_meltingzone;
+	ConfigOptionInts				dribbling_moves;
+	ConfigOptionInts				dribbling_temperature;	
 // dribbling end
     ConfigOptionBool                gcode_comments;
     ConfigOptionEnum<GCodeFlavor>   gcode_flavor;
@@ -689,6 +694,10 @@ protected:
         OPT_PTR(filament_type);
         OPT_PTR(filament_soluble);
         OPT_PTR(filament_cost);
+// dribbling		
+		OPT_PTR(filament_mintemp);
+		OPT_PTR(filament_maxtemp);
+// dribbling		
         OPT_PTR(filament_max_volumetric_speed);
         OPT_PTR(filament_loading_speed);
         OPT_PTR(filament_loading_speed_start);
@@ -703,11 +712,12 @@ protected:
         OPT_PTR(filament_cooling_final_speed);
         OPT_PTR(filament_ramming_parameters);     
 // dribbling        
-				OPT_PTR(filament_dribbling);
-				OPT_PTR(dribbling_meltingzone);
-				OPT_PTR(dribbling_moves);
+		OPT_PTR(filament_dribbling);
+		OPT_PTR(dribbling_meltingzone);
+		OPT_PTR(dribbling_moves);
+		OPT_PTR(dribbling_temperature);
 // end dribbling				
-        OPT_PTR(gcode_comments);
+		OPT_PTR(gcode_comments);
         OPT_PTR(gcode_flavor);
         OPT_PTR(gcode_label_objects);
         OPT_PTR(layer_gcode);

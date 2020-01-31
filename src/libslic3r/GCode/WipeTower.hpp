@@ -181,9 +181,14 @@ public:
         std::vector<float>  ramming_speed;
         float               nozzle_diameter;
         float               filament_area;
+// dribbling		
         bool                filament_dribbling = false;
 		float				dribbling_meltingzone = 8.f ;
 		int					dribbling_moves = 1 ;
+		int					dribbling_temperature = 0 ;	
+		int					filament_mintemp = 0 ;	
+		int					filament_maxtemp = 0 ;		
+// dribbling		
     };
 
 private:

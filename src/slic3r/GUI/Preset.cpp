@@ -487,7 +487,11 @@ const std::vector<std::string>& Preset::filament_options()
 		"filament_max_volumetric_speed",
         "extrusion_multiplier", 
 		"filament_density", 
-		"filament_cost", 
+		"filament_cost",
+// dribbling
+		"filament_mintemp",
+		"filament_maxtemp",
+// dribbling		 
 		"filament_loading_speed", 
 		"filament_loading_speed_start", 
 		"filament_load_time",
@@ -499,9 +503,10 @@ const std::vector<std::string>& Preset::filament_options()
         "filament_cooling_initial_speed", 
         "filament_cooling_final_speed",
 // dribbling start
-				"filament_dribbling",
-				"dribbling_meltingzone",
-				"dribbling_moves",
+		"filament_dribbling",
+		"dribbling_meltingzone",
+		"dribbling_moves",
+		"dribbling_temperature",
 // dribbling end         
         "filament_ramming_parameters", 
         "filament_minimal_purge_on_wipe_tower",

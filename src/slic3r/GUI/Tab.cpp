@@ -1646,7 +1646,15 @@ void TabFilament::build()
         optgroup->append_single_option_line("filament_cost");
 
         optgroup = page->new_optgroup(_(L("Temperature")) + wxString(" °C", wxConvUTF8));
-        Line line = { _(L("Extruder")), "" };
+
+// dribbling        
+		Line line = { _(L("Manufacturer")), "" };
+        line.append_option(optgroup->get_option("filament_mintemp"));
+        line.append_option(optgroup->get_option("filament_maxtemp"));
+        optgroup->append_line(line);
+// dribbling
+		
+		    line = { _(L("Extruder")), "" };
         line.append_option(optgroup->get_option("first_layer_temperature"));
         line.append_option(optgroup->get_option("temperature"));
         optgroup->append_line(line);
@@ -1713,8 +1721,9 @@ void TabFilament::build()
         optgroup->append_single_option_line("filament_cooling_final_speed");
 // dribbling        
         optgroup->append_single_option_line("filament_dribbling");
-				optgroup->append_single_option_line("dribbling_meltingzone");
-				optgroup->append_single_option_line("dribbling_moves");
+		optgroup->append_single_option_line("dribbling_meltingzone");
+		optgroup->append_single_option_line("dribbling_moves");
+		optgroup->append_single_option_line("dribbling_temperature");
 // end dribbling
 
         line = optgroup->create_single_option_line("filament_ramming_parameters");// { _(L("Ramming")), "" };

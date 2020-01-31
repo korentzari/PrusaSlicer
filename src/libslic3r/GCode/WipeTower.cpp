@@ -324,7 +324,8 @@ public:
 		return *this;
 	};
 
-	    // Wait for a period of time (milliseconds).
+// dribbling
+   // Wait for a period of time (milliseconds).
 	WipeTowerWriter& waitmills(float time)
 	{
         if (time==0)
@@ -334,7 +335,7 @@ public:
 		m_gcode += buf;
 		return *this;
 	};
-
+// dribbling
 	// Set speed factor override percentage.
 	WipeTowerWriter& speed_override(int speed)
 	{
@@ -522,7 +523,7 @@ void WipeTower::set_extruder(size_t idx, const PrintConfig& config)
     m_filpar.push_back(FilamentParameters());
 
     m_filpar[idx].material = config.filament_type.get_at(idx);
-    m_filpar[idx].temperature = config.temperature.get_at(idx);
+    m_filpar[idx].temperature = config.temperature.get_at(idx);	
     m_filpar[idx].first_layer_temperature = config.first_layer_temperature.get_at(idx);
 
     // If this is a single extruder MM printer, we will use all the SE-specific config values.
@@ -536,9 +537,14 @@ void WipeTower::set_extruder(size_t idx, const PrintConfig& config)
         m_filpar[idx].cooling_moves           = config.filament_cooling_moves.get_at(idx);
         m_filpar[idx].cooling_initial_speed   = config.filament_cooling_initial_speed.get_at(idx);
         m_filpar[idx].cooling_final_speed     = config.filament_cooling_final_speed.get_at(idx);
-				m_filpar[idx].filament_dribbling      = config.filament_dribbling.get_at(idx);
-				m_filpar[idx].dribbling_meltingzone 	= config.dribbling_meltingzone.get_at(idx);
-				m_filpar[idx].dribbling_moves 				= config.dribbling_moves.get_at(idx);
+// dribbling		
+		m_filpar[idx].filament_dribbling      = config.filament_dribbling.get_at(idx);
+		m_filpar[idx].dribbling_meltingzone   = config.dribbling_meltingzone.get_at(idx);
+		m_filpar[idx].dribbling_moves 		  = config.dribbling_moves.get_at(idx);
+		m_filpar[idx].dribbling_temperature	  = config.dribbling_temperature.get_at(idx);		
+		m_filpar[idx].filament_mintemp 		  = config.filament_mintemp.get_at(idx);
+		m_filpar[idx].filament_maxtemp 		  = config.filament_maxtemp.get_at(idx);
+// dribbling
     }
 
     m_filpar[idx].filament_area = float((M_PI/4.f) * pow(config.filament_diameter.get_at(idx), 2)); // all extruders are assumed to have the same filament diameter at this point
@@ -949,8 +955,8 @@ void WipeTower::toolchange_Unload(
     if (m_semm && (m_cooling_tube_retraction != 0 || m_cooling_tube_length != 0)) {
         float total_retraction_distance = m_cooling_tube_retraction + m_cooling_tube_length/2.f - 15.f; // the 15mm is reserved for the first part after ramming
 		if ((m_semm == false) || (m_filpar[m_current_tool].filament_dribbling == false)) {
-			writer.append("; START PRUSA Retraction GCODE\n");
-        writer.suppress_preview()
+			writer.append("; START PRUSA standard Retraction GCODE\n");
+        	  writer.suppress_preview()
               .retract(15.f, m_filpar[m_current_tool].unloading_speed_start * 60.f) // feedrate 5000mm/min = 83mm/s
               .retract(0.70f * total_retraction_distance, 1.0f * m_filpar[m_current_tool].unloading_speed * 60.f)
               .retract(0.20f * total_retraction_distance, 0.5f * m_filpar[m_current_tool].unloading_speed * 60.f)
@@ -962,7 +968,7 @@ void WipeTower::toolchange_Unload(
               .load_move_x_advanced(old_x,         -0.10f * total_retraction_distance, 0.3f * m_filpar[m_current_tool].unloading_speed)
               .travel(old_x, writer.y()) // in case previous move was shortened to limit feedrate*/
               .resume_preview();
-    	writer.append("; END Retraction GCODE\n");
+    		  writer.append("; END Retraction GCODE\n");
     }
 		else
 		{
@@ -975,7 +981,10 @@ void WipeTower::toolchange_Unload(
 			turning_point = xr - old_x > old_x - xl ? xr : xl;
 
 			float dribbling_meltingzone = m_filpar[m_current_tool].dribbling_meltingzone; // from the end of PTFE Tube
-			int dribbling_moves = m_filpar[m_current_tool].dribbling_moves;           // TBD: define in GUI
+			int dribbling_moves = m_filpar[m_current_tool].dribbling_moves;
+			int dribbling_temperature = m_filpar[m_current_tool].dribbling_temperature;
+			int filament_mintemp = m_filpar[m_current_tool].filament_mintemp;
+			int filament_maxtemp = m_filpar[m_current_tool].filament_maxtemp;
 			float dribbling_distance = dribbling_meltingzone * 3.f;   // 25mm
 			
 			int dribbling_tictac = 50;
