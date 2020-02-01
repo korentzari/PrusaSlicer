@@ -538,12 +538,12 @@ void WipeTower::set_extruder(size_t idx, const PrintConfig& config)
         m_filpar[idx].cooling_initial_speed   = config.filament_cooling_initial_speed.get_at(idx);
         m_filpar[idx].cooling_final_speed     = config.filament_cooling_final_speed.get_at(idx);
 // dribbling		
-		m_filpar[idx].filament_dribbling      = config.filament_dribbling.get_at(idx);
-		m_filpar[idx].dribbling_meltingzone   = config.dribbling_meltingzone.get_at(idx);
-		m_filpar[idx].dribbling_moves 		  = config.dribbling_moves.get_at(idx);
-		m_filpar[idx].dribbling_temperature	  = config.dribbling_temperature.get_at(idx);		
-		m_filpar[idx].filament_mintemp 		  = config.filament_mintemp.get_at(idx);
-		m_filpar[idx].filament_maxtemp 		  = config.filament_maxtemp.get_at(idx);
+        m_filpar[idx].filament_dribbling      = config.filament_dribbling.get_at(idx);
+        m_filpar[idx].dribbling_meltingzone   = config.dribbling_meltingzone.get_at(idx);
+        m_filpar[idx].dribbling_moves 		    = config.dribbling_moves.get_at(idx);
+        m_filpar[idx].dribbling_temperature	  = config.dribbling_temperature.get_at(idx);		
+        m_filpar[idx].filament_mintemp 		    = config.filament_mintemp.get_at(idx);
+        m_filpar[idx].filament_maxtemp 		    = config.filament_maxtemp.get_at(idx);
 // dribbling
     }
 
@@ -574,13 +574,13 @@ void WipeTower::set_extruder(size_t idx, const PrintConfig& config)
 
 // Returns gcode to prime the nozzles at the front edge of the print bed.
 std::vector<WipeTower::ToolChangeResult> WipeTower::prime(
-	// print_z of the first layer.
-	float 						first_layer_height, 
-	// Extruder indices, in the order to be primed. The last extruder will later print the wipe tower brim, print brim and the object.
-	const std::vector<unsigned int> &tools,
+	                                                         // print_z of the first layer.
+	                                                        float first_layer_height, 
+	                                                        // Extruder indices, in the order to be primed. The last extruder will later print the wipe tower brim, print brim and the object.
+	                                                        const std::vector<unsigned int> &tools,
 	// If true, the last priming are will be the same as the other priming areas, and the rest of the wipe will be performed inside the wipe tower.
 	// If false, the last priming are will be large enough to wipe the last extruder sufficiently.
-	bool 						last_wipe_inside_wipe_tower)
+	                                                        bool last_wipe_inside_wipe_tower)
 {
 	this->set_layer(first_layer_height, first_layer_height, tools.size(), true, false);
 	this->m_current_tool 		= tools.front();
@@ -622,6 +622,7 @@ std::vector<WipeTower::ToolChangeResult> WipeTower::prime(
         else
             writer.set_initial_position(results.back().end_pos);
 
+// check dribbling
 
         unsigned int tool = tools[idx_tool];
         m_left_to_right = true;
@@ -724,7 +725,7 @@ WipeTower::ToolChangeResult WipeTower::tool_change(unsigned int tool, bool last_
 		.set_initial_tool(m_current_tool)
 		.set_y_shift(m_y_shift + (tool!=(unsigned int)(-1) && (m_current_shape == SHAPE_REVERSED && !m_peters_wipe_tower) ? m_layer_info->depth - m_layer_info->toolchanges_depth(): 0.f))
 		.append(";--------------------\n"
-				"; CP TOOLCHANGE START\n")
+		    		"; CP TOOLCHANGE START\n")
 		.comment_with_value(" toolchange #", m_num_tool_changes + 1); // the number is zero-based
 
     if (tool != (unsigned)(-1))
@@ -741,14 +742,40 @@ WipeTower::ToolChangeResult WipeTower::tool_change(unsigned int tool, bool last_
 	if (m_set_extruder_trimpot)
 		writer.set_extruder_trimpot(750);
 
+
     // Ram the hot material out of the melt zone, retract the filament into the cooling tubes and let it cool.
     if (tool != (unsigned int)-1){ 			// This is not the last change.
         toolchange_Unload(writer, cleaning_box, m_filpar[m_current_tool].material,
-                          m_is_first_layer ? m_filpar[tool].first_layer_temperature : m_filpar[tool].temperature);
-        toolchange_Change(writer, tool, m_filpar[tool].material); // Change the tool, set a speed override for soluble and flex materials.
+                          m_is_first_layer ? m_filpar[tool].first_layer_temperature : m_filpar[tool].temperature);        
+// dribbling
+
+				unsigned int common_temp_L;
+				unsigned int common_temp_H;
+				if ((m_semm == true) && (m_filpar[m_current_tool].filament_dribbling == true)) {
+					if (m_filpar[m_current_tool].filament_maxtemp > m_filpar[tool].filament_maxtemp)
+						{ common_temp_L = m_filpar[tool].filament_mintemp;
+						  common_temp_H = m_filpar[m_current_tool].filament_maxtemp;
+						} else
+					{  common_temp_L = m_filpar[tool].filament_mintemp;
+						 common_temp_H = m_filpar[tool].filament_mintemp;
+					}					
+				}
+				
+				toolchange_Change(writer, tool, m_filpar[tool].material); // Change the tool, set a speed override for soluble and flex materials.
+				
+// dribbling				
+				if ((m_semm == true) && (m_filpar[m_current_tool].filament_dribbling == true)) {
+					writer.set_extruder_temp(common_temp_H, true);
+			  }        
         toolchange_Load(writer, cleaning_box);
+        
         writer.travel(writer.x(), writer.y()-m_perimeter_width); // cooling and loading were done a bit down the road
         toolchange_Wipe(writer, cleaning_box, wipe_volume);     // Wipe the newly loaded filament until the end of the assigned wipe area.
+// dribbling
+				if ((m_semm == true) && (m_filpar[m_current_tool].filament_dribbling == true)) {				        
+        	writer.set_extruder_temp(m_is_first_layer ? m_filpar[tool].first_layer_temperature : m_filpar[tool].temperature, false);
+        }
+// dribbling				        	
         ++ m_num_tool_changes;
     } else
         toolchange_Unload(writer, cleaning_box, m_filpar[m_current_tool].material, m_filpar[m_current_tool].temperature);
@@ -857,10 +884,10 @@ WipeTower::ToolChangeResult WipeTower::toolchange_Brim(bool sideOnly, float y_of
 
 // Ram the hot material out of the melt zone, retract the filament into the cooling tubes and let it cool.
 void WipeTower::toolchange_Unload(
-	WipeTowerWriter &writer,
-	const box_coordinates 	&cleaning_box,
-	const std::string&		 current_material,
-	const int 				 new_temperature)
+																		WipeTowerWriter 			  &writer,
+																		const box_coordinates 	&cleaning_box,
+																		const std::string&		  current_material,
+																		const int 				      new_temperature)
 {
 	float xl = cleaning_box.ld.x() + 1.f * m_perimeter_width;
 	float xr = cleaning_box.rd.x() - 1.f * m_perimeter_width;
@@ -926,6 +953,10 @@ void WipeTower::toolchange_Unload(
 
     // now the ramming itself:
     writer.append("; START Ramming GCODE\n");
+    if ((m_semm == true) && (m_filpar[m_current_tool].filament_dribbling == true)) {
+       writer.set_extruder_temp(m_filpar[m_current_tool].dribbling_temperature, false);	
+    }
+    	
     while (i < m_filpar[m_current_tool].ramming_speed.size())
     {
         const float x = volume_to_length(m_filpar[m_current_tool].ramming_speed[i] * 0.25f, line_width, m_layer_height);
@@ -981,16 +1012,18 @@ void WipeTower::toolchange_Unload(
 			turning_point = xr - old_x > old_x - xl ? xr : xl;
 
 			float dribbling_meltingzone = m_filpar[m_current_tool].dribbling_meltingzone; // from the end of PTFE Tube
-			int dribbling_moves = m_filpar[m_current_tool].dribbling_moves;
-			int dribbling_temperature = m_filpar[m_current_tool].dribbling_temperature;
-			int filament_mintemp = m_filpar[m_current_tool].filament_mintemp;
-			int filament_maxtemp = m_filpar[m_current_tool].filament_maxtemp;
+			int   dribbling_moves = m_filpar[m_current_tool].dribbling_moves;
+			int   dribbling_temperature = m_filpar[m_current_tool].dribbling_temperature;
+			int   filament_mintemp = m_filpar[m_current_tool].filament_mintemp;
+			int   filament_maxtemp = m_filpar[m_current_tool].filament_maxtemp;
 			float dribbling_distance = dribbling_meltingzone * 3.f;   // 25mm
 			
-			int dribbling_tictac = 50;
+			int   dribbling_tictac = 50;
 			float dr_offset = 2.0f; //  initial break dribbling distance 
 			float speed = m_filpar[m_current_tool].cooling_initial_speed;
 
+      // dribbling
+      
 			/*
 			// Extract inital
 			for (int i = 0; i < dribbling_tictac; ++i) {
@@ -1008,9 +1041,9 @@ void WipeTower::toolchange_Unload(
 			}
 			*/
 			writer.retract(0.40f * dribbling_distance, m_filpar[m_current_tool].unloading_speed_start * 60.f) // feedrate 5000mm/min = 83mm/s
-				  .retract(0.30f * dribbling_distance, 1.0f * m_filpar[m_current_tool].unloading_speed * 60.f)
-				  .retract(0.20f * dribbling_distance, 0.5f * m_filpar[m_current_tool].unloading_speed * 60.f)
-				  .retract(0.10f * dribbling_distance, 0.3f * m_filpar[m_current_tool].unloading_speed * 60.f);									  
+				    .retract(0.30f * dribbling_distance, 1.0f * m_filpar[m_current_tool].unloading_speed * 60.f)
+				    .retract(0.20f * dribbling_distance, 0.5f * m_filpar[m_current_tool].unloading_speed * 60.f)
+				    .retract(0.10f * dribbling_distance, 0.3f * m_filpar[m_current_tool].unloading_speed * 60.f);									  
 			
 			writer.load_move_x_advanced(turning_point, -(dribbling_distance / 2), speed * 0.40f);
 			writer.load_move_x_advanced(old_x, (dribbling_distance / 2), speed * 0.40f);
@@ -1033,6 +1066,7 @@ void WipeTower::toolchange_Unload(
 				}				
 				writer.append("; ---\n");
 			}			
+			
 			float total_dribbling_distance = m_cooling_tube_retraction + (m_cooling_tube_length / 2.f) - 15.f - dribbling_distance; // the 15mm is reserved for the first part after ramming
 			writer.retract(total_dribbling_distance, 0.3f * m_filpar[m_current_tool].unloading_speed * 60.f)
 			      .resume_preview();
@@ -1040,17 +1074,6 @@ void WipeTower::toolchange_Unload(
 		}
 	}
 	
-    // Wipe tower should only change temperature with single extruder MM. Otherwise, all temperatures should
-    // be already set and there is no need to change anything. Also, the temperature could be changed
-    // for wrong extruder.
-    if (m_semm) {
-        if (new_temperature != 0 && (new_temperature != m_old_temperature || m_is_first_layer) ) { 	// Set the extruder temperature, but don't wait.
-            // If the required temperature is the same as last time, don't emit the M104 again (if user adjusted the value, it would be reset)
-            // However, always change temperatures on the first layer (this is to avoid issues with priming lines turned off).
-            writer.set_extruder_temp(new_temperature, false);
-            m_old_temperature = new_temperature;
-        }
-    }
 
     // Cooling:
     const int& number_of_moves = m_filpar[m_current_tool].cooling_moves;
@@ -1080,9 +1103,9 @@ void WipeTower::toolchange_Unload(
 	// we should be at the beginning of the cooling tube again - let's move to parking position:
 	// THIS CODE IS THE EFFECTIVE EXTRUDER EJECT FILAMENT. Failure in calculation and the filament will be still into the grinder
 	float const additionl_safe = 20.f;
-	writer.append("; EJECT FILAMENT\n");
+	writer.append("; EJECT FILAMENT - tip should be already out of the melting area\n");
 	writer.retract(-m_cooling_tube_length / 2.f + m_parking_pos_retraction - m_cooling_tube_retraction + additionl_safe, 2000);
-	writer.append("; ----\n");
+	writer.append("; --------------\n");
 
 	// this is to align ramming and future wiping extrusions, so the future y-steps can be uniform from the start:
     // the perimeter_width will later be subtracted, it is there to not load while moving over just extruded material
@@ -1096,9 +1119,9 @@ void WipeTower::toolchange_Unload(
 
 // Change the tool, set a speed override for soluble and flex materials.
 void WipeTower::toolchange_Change(
-	WipeTowerWriter &writer,
-	const unsigned int 	new_tool, 
-	const std::string&  new_material)
+																		WipeTowerWriter 	  &writer,
+																		const unsigned int 	new_tool, 
+																		const std::string&  new_material)
 {
     // Ask the writer about how much of the old filament we consumed:
     if (m_current_tool < m_used_filament_length.size())
@@ -1124,8 +1147,8 @@ void WipeTower::toolchange_Change(
 }
 
 void WipeTower::toolchange_Load(
-	WipeTowerWriter &writer,
-	const box_coordinates  &cleaning_box)
+																WipeTowerWriter 			 &writer,
+																const box_coordinates  &cleaning_box)
 {
     if (m_semm && (m_parking_pos_retraction != 0 || m_extra_loading_move != 0)) {
         float xl = cleaning_box.ld.x() + m_perimeter_width * 0.75f;
@@ -1137,6 +1160,7 @@ void WipeTower::toolchange_Load(
         float edist = m_parking_pos_retraction+m_extra_loading_move;
 
         writer.append("; CP TOOLCHANGE LOAD\n")
+                
               .suppress_preview()
               /*.load_move_x_advanced(turning_point, 0.2f * edist, 0.3f * m_filpar[m_current_tool].loading_speed)  // Acceleration
               .load_move_x_advanced(oldx,          0.5f * edist,        m_filpar[m_current_tool].loading_speed)  // Fast phase
