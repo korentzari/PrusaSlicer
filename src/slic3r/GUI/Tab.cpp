@@ -1720,10 +1720,9 @@ void TabFilament::build()
         optgroup->append_single_option_line("filament_cooling_initial_speed");
         optgroup->append_single_option_line("filament_cooling_final_speed");
 // dribbling        
-        optgroup->append_single_option_line("filament_dribbling");
-		optgroup->append_single_option_line("dribbling_meltingzone");
-		optgroup->append_single_option_line("dribbling_moves");
-		optgroup->append_single_option_line("dribbling_temperature");
+        optgroup->append_single_option_line("filament_dribbling");		
+		    optgroup->append_single_option_line("dribbling_moves");
+		    optgroup->append_single_option_line("dribbling_temperature");
 // end dribbling
 
         line = optgroup->create_single_option_line("filament_ramming_parameters");// { _(L("Ramming")), "" };
@@ -2523,6 +2522,7 @@ void TabPrinter::build_unregular_pages()
         optgroup->append_single_option_line("cooling_tube_length");
         optgroup->append_single_option_line("parking_pos_retraction");
         optgroup->append_single_option_line("extra_loading_move");
+        optgroup->append_single_option_line("dribbling_meltingzone");
         optgroup->append_single_option_line("high_current_on_filament_swap");
         m_pages.insert(m_pages.end() - n_after_single_extruder_MM, page);
         m_has_single_extruder_MM_page = true;

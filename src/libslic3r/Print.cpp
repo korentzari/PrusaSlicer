@@ -195,9 +195,8 @@ bool Print::invalidate_state_by_config_options(const std::vector<t_config_option
             || opt_key == "filament_max_volumetric_speed"
             // dribbling
             || opt_key == "filament_dribbling"          
-			|| opt_key == "dribbling_meltingzone"
-			|| opt_key == "dribbling_moves"
-			|| opt_key == "dribbling_temperature"			
+			      || opt_key == "dribbling_moves"
+			      || opt_key == "dribbling_temperature"			
 			// dribbling
             || opt_key == "gcode_flavor"
             || opt_key == "high_current_on_filament_swap"
@@ -213,6 +212,9 @@ bool Print::invalidate_state_by_config_options(const std::vector<t_config_option
             || opt_key == "cooling_tube_retraction"
             || opt_key == "cooling_tube_length"
             || opt_key == "extra_loading_move"
+//dribbling            
+			      || opt_key == "dribbling_meltingzone"            
+//dribbling			      
             || opt_key == "z_offset") {
             steps.emplace_back(psWipeTower);
         } else if (

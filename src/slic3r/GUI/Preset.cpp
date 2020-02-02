@@ -504,7 +504,6 @@ const std::vector<std::string>& Preset::filament_options()
         "filament_cooling_final_speed",
 // dribbling start
 		"filament_dribbling",
-		"dribbling_meltingzone",
 		"dribbling_moves",
 		"dribbling_temperature",
 // dribbling end         
@@ -584,6 +583,7 @@ const std::vector<std::string>& Preset::printer_options()
 			"high_current_on_filament_swap", 
 			"parking_pos_retraction", 
 			"extra_loading_move", 
+		  "dribbling_meltingzone",			
 			"max_print_height",
             "default_print_profile", 
 			"inherits",

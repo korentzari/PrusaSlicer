@@ -630,10 +630,9 @@ public:
     ConfigOptionFloats              filament_cooling_final_speed;
     ConfigOptionStrings             filament_ramming_parameters;    
 // dribbling    
-	ConfigOptionBools             	filament_dribbling;
-	ConfigOptionFloats				dribbling_meltingzone;
-	ConfigOptionInts				dribbling_moves;
-	ConfigOptionInts				dribbling_temperature;	
+	ConfigOptionBools             	  filament_dribbling;
+	ConfigOptionInts				          dribbling_moves;
+	ConfigOptionInts				          dribbling_temperature;	
 // dribbling end
     ConfigOptionBool                gcode_comments;
     ConfigOptionEnum<GCodeFlavor>   gcode_flavor;
@@ -671,6 +670,7 @@ public:
     ConfigOptionBool                remaining_times;
     ConfigOptionBool                silent_mode;
     ConfigOptionFloat               extra_loading_move;
+	  ConfigOptionFloats				      dribbling_meltingzone;    
 
     std::string get_extrusion_axis() const
     {
@@ -713,7 +713,6 @@ protected:
         OPT_PTR(filament_ramming_parameters);     
 // dribbling        
 		OPT_PTR(filament_dribbling);
-		OPT_PTR(dribbling_meltingzone);
 		OPT_PTR(dribbling_moves);
 		OPT_PTR(dribbling_temperature);
 // end dribbling				
@@ -753,6 +752,7 @@ protected:
         OPT_PTR(remaining_times);
         OPT_PTR(silent_mode);
         OPT_PTR(extra_loading_move);
+	      OPT_PTR(dribbling_meltingzone);
     }
 };
 
