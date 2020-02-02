@@ -631,8 +631,7 @@ public:
     ConfigOptionStrings             filament_ramming_parameters;    
 // dribbling    
 	ConfigOptionBools             	  filament_dribbling;
-	ConfigOptionInts				          dribbling_moves;
-	ConfigOptionInts				          dribbling_temperature;	
+	ConfigOptionInts				          dribbling_moves;	
 // dribbling end
     ConfigOptionBool                gcode_comments;
     ConfigOptionEnum<GCodeFlavor>   gcode_flavor;
@@ -714,7 +713,6 @@ protected:
 // dribbling        
 		OPT_PTR(filament_dribbling);
 		OPT_PTR(dribbling_moves);
-		OPT_PTR(dribbling_temperature);
 // end dribbling				
 		OPT_PTR(gcode_comments);
         OPT_PTR(gcode_flavor);
@@ -768,6 +766,9 @@ public:
     ConfigOptionBool                avoid_crossing_perimeters;
     ConfigOptionPoints              bed_shape;
     ConfigOptionInts                bed_temperature;
+// dribbling    
+    ConfigOptionInts				        dribbling_temperature;	
+// dribbling    
     ConfigOptionFloat               bridge_acceleration;
     ConfigOptionInts                bridge_fan_speed;
     ConfigOptionFloat               brim_width;
@@ -840,6 +841,9 @@ protected:
         OPT_PTR(avoid_crossing_perimeters);
         OPT_PTR(bed_shape);
         OPT_PTR(bed_temperature);
+// dribbling        
+        OPT_PTR(dribbling_temperature);
+// dribbling        
         OPT_PTR(bridge_acceleration);
         OPT_PTR(bridge_fan_speed);
         OPT_PTR(brim_width);

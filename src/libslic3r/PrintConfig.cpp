@@ -720,7 +720,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionInts { 210 });
 
 	def = this->add("dribbling_temperature", coInts);
-    def->label = L("Temperature for tip shaping");
+    def->label = L("Tip shaping");
     def->mode = comAdvanced;
     def->tooltip = L("Best filament's temperature for dribbling tip shaping.");
     def->min = 0;

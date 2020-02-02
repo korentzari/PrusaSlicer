@@ -1664,6 +1664,12 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("bed_temperature"));
         optgroup->append_line(line);
 
+// dribbling        
+        line = { _(L("Dribbling")), "" };        
+        line.append_option(optgroup->get_option("dribbling_temperature"));
+        optgroup->append_line(line);
+// dribbling        
+
     page = add_options_page(_(L("Cooling")), "cooling");
         optgroup = page->new_optgroup(_(L("Enable")));
         optgroup->append_single_option_line("fan_always_on");
@@ -1721,8 +1727,7 @@ void TabFilament::build()
         optgroup->append_single_option_line("filament_cooling_final_speed");
 // dribbling        
         optgroup->append_single_option_line("filament_dribbling");		
-		    optgroup->append_single_option_line("dribbling_moves");
-		    optgroup->append_single_option_line("dribbling_temperature");
+		    optgroup->append_single_option_line("dribbling_moves");		    
 // end dribbling
 
         line = optgroup->create_single_option_line("filament_ramming_parameters");// { _(L("Ramming")), "" };
