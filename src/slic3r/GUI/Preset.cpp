@@ -447,6 +447,7 @@ const std::vector<std::string>& Preset::print_options()
     "ooze_prevention", 
 		"standby_temperature_delta", 
 		"interface_shells", 
+    "filament_dribbling",		
 		"extrusion_width", 
 		"first_layer_extrusion_width",
     "perimeter_extrusion_width", 
@@ -502,8 +503,7 @@ const std::vector<std::string>& Preset::filament_options()
 		"filament_cooling_moves",
     "filament_cooling_initial_speed", 
     "filament_cooling_final_speed",
-// dribbling start
-		"filament_dribbling",
+// dribbling start		
 		"dribbling_moves",
 		"dribbling_temperature",
 // dribbling end         

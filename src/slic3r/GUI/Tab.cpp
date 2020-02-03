@@ -1173,6 +1173,7 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(_(L("Advanced")));
         optgroup->append_single_option_line("interface_shells");
+        optgroup->append_single_option_line("filament_dribbling");		
 
     page = add_options_page(_(L("Advanced")), "wrench");
         optgroup = page->new_optgroup(_(L("Extrusion width")));
@@ -1726,7 +1727,6 @@ void TabFilament::build()
         optgroup->append_single_option_line("filament_cooling_initial_speed");
         optgroup->append_single_option_line("filament_cooling_final_speed");
 // dribbling        
-        optgroup->append_single_option_line("filament_dribbling");		
 		    optgroup->append_single_option_line("dribbling_moves");		    
 // end dribbling
 

@@ -538,8 +538,8 @@ void WipeTower::set_extruder(size_t idx, const PrintConfig& config)
         m_filpar[idx].cooling_initial_speed   = config.filament_cooling_initial_speed.get_at(idx);
         m_filpar[idx].cooling_final_speed     = config.filament_cooling_final_speed.get_at(idx);
 // dribbling		
-        m_filpar[idx].filament_dribbling      = config.filament_dribbling.get_at(idx);
-        m_filpar[idx].dribbling_meltingzone   = config.dribbling_meltingzone.get_at(idx);
+        m_filpar[idx].filament_dribbling      = config.filament_dribbling;
+        m_filpar[idx].dribbling_meltingzone   = config.dribbling_meltingzone;
         m_filpar[idx].dribbling_moves 		    = config.dribbling_moves.get_at(idx);
         m_filpar[idx].dribbling_temperature	  = config.dribbling_temperature.get_at(idx);		
         m_filpar[idx].filament_mintemp 		    = config.filament_mintemp.get_at(idx);

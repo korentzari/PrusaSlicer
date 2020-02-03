@@ -197,7 +197,7 @@ bool Print::invalidate_state_by_config_options(const std::vector<t_config_option
             || opt_key == "filament_dribbling"          
 			      || opt_key == "dribbling_moves"
 			      || opt_key == "dribbling_temperature"			
-			// dribbling
+			      // dribbling
             || opt_key == "gcode_flavor"
             || opt_key == "high_current_on_filament_swap"
             || opt_key == "infill_first"
