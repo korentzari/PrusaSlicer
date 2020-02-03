@@ -680,7 +680,7 @@ void PrintConfigDef::init_fff_params()
 
 // dribbling additions
         
-    def = this->add("filament_dribbling", coBool);
+    def = this->add("dribbling_enabled", coBool);
     def->label = L("Dribbling Mode");
     def->tooltip = L("Dribbling mode improves the shape of the filament at unloading.");    
     def->mode = comSimple;

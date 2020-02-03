@@ -194,7 +194,7 @@ bool Print::invalidate_state_by_config_options(const std::vector<t_config_option
             || opt_key == "filament_ramming_parameters"
             || opt_key == "filament_max_volumetric_speed"
             // dribbling
-            || opt_key == "filament_dribbling"          
+            || opt_key == "dribbling_enabled"          
 			      || opt_key == "dribbling_moves"
 			      || opt_key == "dribbling_temperature"			
 			      // dribbling

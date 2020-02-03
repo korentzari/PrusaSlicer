@@ -538,7 +538,7 @@ void WipeTower::set_extruder(size_t idx, const PrintConfig& config)
         m_filpar[idx].cooling_initial_speed   = config.filament_cooling_initial_speed.get_at(idx);
         m_filpar[idx].cooling_final_speed     = config.filament_cooling_final_speed.get_at(idx);
 // dribbling		
-        m_filpar[idx].filament_dribbling      = config.filament_dribbling;
+        m_filpar[idx].dribbling_enabled      = config.dribbling_enabled;
         m_filpar[idx].dribbling_meltingzone   = config.dribbling_meltingzone;
         m_filpar[idx].dribbling_moves 		    = config.dribbling_moves.get_at(idx);
         m_filpar[idx].dribbling_temperature	  = config.dribbling_temperature.get_at(idx);		
@@ -751,7 +751,7 @@ WipeTower::ToolChangeResult WipeTower::tool_change(unsigned int tool, bool last_
 
 				unsigned int common_temp_L;
 				unsigned int common_temp_H;
-				if ((m_semm == true) && (m_filpar[m_current_tool].filament_dribbling == true)) {
+				if ((m_semm == true) && (m_filpar[m_current_tool].dribbling_enabled == true)) {
 					if (m_filpar[m_current_tool].filament_maxtemp > m_filpar[tool].filament_maxtemp)
 						{ common_temp_L = m_filpar[tool].filament_mintemp;
 						  common_temp_H = m_filpar[m_current_tool].filament_maxtemp;
@@ -764,7 +764,7 @@ WipeTower::ToolChangeResult WipeTower::tool_change(unsigned int tool, bool last_
 				toolchange_Change(writer, tool, m_filpar[tool].material); // Change the tool, set a speed override for soluble and flex materials.
 				
 // dribbling				
-				if ((m_semm == true) && (m_filpar[m_current_tool].filament_dribbling == true)) {
+				if ((m_semm == true) && (m_filpar[m_current_tool].dribbling_enabled == true)) {
 					writer.set_extruder_temp(common_temp_H, true);
 			  }        
         toolchange_Load(writer, cleaning_box);
@@ -772,7 +772,7 @@ WipeTower::ToolChangeResult WipeTower::tool_change(unsigned int tool, bool last_
         writer.travel(writer.x(), writer.y()-m_perimeter_width); // cooling and loading were done a bit down the road
         toolchange_Wipe(writer, cleaning_box, wipe_volume);     // Wipe the newly loaded filament until the end of the assigned wipe area.
 // dribbling
-				if ((m_semm == true) && (m_filpar[m_current_tool].filament_dribbling == true)) {				        
+				if ((m_semm == true) && (m_filpar[m_current_tool].dribbling_enabled == true)) {				        
         	writer.set_extruder_temp(m_is_first_layer ? m_filpar[tool].first_layer_temperature : m_filpar[tool].temperature, false);
         }
 // dribbling				        	
@@ -953,7 +953,7 @@ void WipeTower::toolchange_Unload(
 
     // now the ramming itself:
     writer.append("; START Ramming GCODE\n");
-    if ((m_semm == true) && (m_filpar[m_current_tool].filament_dribbling == true)) {
+    if ((m_semm == true) && (m_filpar[m_current_tool].dribbling_enabled == true)) {
        writer.set_extruder_temp(m_filpar[m_current_tool].dribbling_temperature, false);	
     }
     	
@@ -985,7 +985,7 @@ void WipeTower::toolchange_Unload(
     float turning_point = (!m_left_to_right ? xl : xr );
     if (m_semm && (m_cooling_tube_retraction != 0 || m_cooling_tube_length != 0)) {
         float total_retraction_distance = m_cooling_tube_retraction + m_cooling_tube_length/2.f - 15.f; // the 15mm is reserved for the first part after ramming
-		if ((m_semm == false) || (m_filpar[m_current_tool].filament_dribbling == false)) {
+		if ((m_semm == false) || (m_filpar[m_current_tool].dribbling_enabled == false)) {
 			writer.append("; START PRUSA standard Retraction GCODE\n");
         	  writer.suppress_preview()
               .retract(15.f, m_filpar[m_current_tool].unloading_speed_start * 60.f) // feedrate 5000mm/min = 83mm/s

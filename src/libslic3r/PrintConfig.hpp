@@ -631,7 +631,7 @@ public:
     ConfigOptionFloats              filament_cooling_final_speed;
     ConfigOptionStrings             filament_ramming_parameters;    
 // dribbling    
-	  ConfigOptionBool             	  filament_dribbling;
+	  ConfigOptionBool             	  dribbling_enabled;
 	  ConfigOptionInts				        dribbling_moves;	
 // dribbling end
     ConfigOptionBool                gcode_comments;
@@ -713,7 +713,7 @@ protected:
         OPT_PTR(filament_cooling_final_speed);
         OPT_PTR(filament_ramming_parameters);     
 // dribbling        
-		    OPT_PTR(filament_dribbling);
+		    OPT_PTR(dribbling_enabled);
 		    OPT_PTR(dribbling_moves);
 // end dribbling				
 		OPT_PTR(gcode_comments);

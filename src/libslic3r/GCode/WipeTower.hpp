@@ -182,7 +182,7 @@ public:
         float               nozzle_diameter;
         float               filament_area;
 // dribbling		
-        bool                filament_dribbling = false;
+        bool                dribbling_enabled = false;
 		float				dribbling_meltingzone = 8.f ;
 		int					dribbling_moves = 1 ;
 		int					dribbling_temperature = 0 ;	

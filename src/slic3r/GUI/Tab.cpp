@@ -1173,7 +1173,7 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(_(L("Advanced")));
         optgroup->append_single_option_line("interface_shells");
-        optgroup->append_single_option_line("filament_dribbling");		
+        optgroup->append_single_option_line("dribbling_enabled");		
 
     page = add_options_page(_(L("Advanced")), "wrench");
         optgroup = page->new_optgroup(_(L("Extrusion width")));
