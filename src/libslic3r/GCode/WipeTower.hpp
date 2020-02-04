@@ -182,12 +182,11 @@ public:
         float               nozzle_diameter;
         float               filament_area;
 // dribbling		
-        bool                dribbling_enabled = false;
-		float				dribbling_meltingzone = 8.f ;
-		int					dribbling_moves = 1 ;
-		int					dribbling_temperature = 0 ;	
-		int					filament_mintemp = 0 ;	
-		int					filament_maxtemp = 0 ;		
+		    float				        dribbling_meltingzone = 8.f ;
+		    int					        dribbling_moves = 1 ;
+		    int					        dribbling_temperature = 0 ;	
+		    int					        filament_mintemp = 0 ;	
+		    int					        filament_maxtemp = 0 ;		
 // dribbling		
     };
 
@@ -209,17 +208,18 @@ private:
 
 
 	bool   m_semm               = true; // Are we using a single extruder multimaterial printer?
-    Vec2f  m_wipe_tower_pos; 			// Left front corner of the wipe tower in mm.
+  Vec2f  m_wipe_tower_pos; 			// Left front corner of the wipe tower in mm.
 	float  m_wipe_tower_width; 			// Width of the wipe tower.
 	float  m_wipe_tower_depth 	= 0.f; 	// Depth of the wipe tower
 	float  m_wipe_tower_rotation_angle = 0.f; // Wipe tower rotation angle in degrees (with respect to x axis)
-    float  m_internal_rotation  = 0.f;
+  float  m_internal_rotation  = 0.f;
 	float  m_y_shift			= 0.f;  // y shift passed to writer
 	float  m_z_pos 				= 0.f;  // Current Z position.
 	float  m_layer_height 		= 0.f; 	// Current layer height.
 	size_t m_max_color_changes 	= 0; 	// Maximum number of color changes per layer.
 	bool   m_is_first_layer 	= false;// Is this the 1st layer of the print? If so, print the brim around the waste tower.
-    int    m_old_temperature    = -1;   // To keep track of what was the last temp that we set (so we don't issue the command when not neccessary)
+  int    m_old_temperature    = -1;   // To keep track of what was the last temp that we set (so we don't issue the command when not neccessary)
+  bool   m_dribbling_enabled = false;
 
 	// G-code generator parameters.
     float           m_cooling_tube_retraction   = 0.f;
