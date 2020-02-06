@@ -22,10 +22,10 @@ If Dribbling mode is enabled, during the MMU2S filament change, just before extr
 
 On the `Filament settings` tab, there are 3 new fields in the Temperature group:
 
-- **MANUFACTURER MIN TEMP° and MAX TEMP°** ->  Those are the manufacturer printing specification **temperature** (in C°) of the filament, normally printed on the roll.
+- **MANUFACTURER MIN TEMPÂ° and MAX TEMPÂ°** ->  Those are the manufacturer printing specification **temperature** (in CÂ°) of the filament, normally printed on the roll.
 Normally under the MIN TEMP the filament does not melt, and over the MAX TEMP the filament degrades or burn.
 
-- **DRIBBLING TIP SHAPE** temperature -> This is the ideal **temperature** (in C°) at which the tip shaping comes better. It is a matter of experimentation, and each filament could be different.
+- **DRIBBLING TIP SHAPE** temperature -> This is the ideal **temperature** (in CÂ°) at which the tip shaping comes better. It is a matter of experimentation, and each filament could be different.
 
 On the `Filament settings` tab, selecting Advanced on the left, you can find a new parameter in Toolchange Parameters with single extruder MM printers group:
 
