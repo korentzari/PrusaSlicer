@@ -731,7 +731,7 @@ WipeTower::ToolChangeResult WipeTower::tool_change(unsigned int tool, bool last_
 		    		"; CP TOOLCHANGE START\n")
 		.comment_with_value(" toolchange #", m_num_tool_changes + 1); // the number is zero-based
 
-    if (tool != (unsigned)(-1))
+  if (tool != (unsigned)(-1))
         writer.append(std::string("; material : " + (m_current_tool < m_filpar.size() ? m_filpar[m_current_tool].material : "(NONE)") + " -> " + m_filpar[tool].material + "\n").c_str())
               .append(";--------------------\n");
 
@@ -778,18 +778,16 @@ WipeTower::ToolChangeResult WipeTower::tool_change(unsigned int tool, bool last_
 				
 // dribbling				
 				if ((m_semm == true) && (m_dribbling_enabled == true)) {
+    	    writer.append(";--------------------\n"
+		    		            "; SET COMMON TEMPERATURE to use between two different materials\n");					
 					writer.comment_with_value(" Common flushing temperature =", common_temp_H);
 					writer.set_extruder_temp(common_temp_H, true);
+					writer.append(";--------------------\n");
 			  }        
         toolchange_Load(writer, cleaning_box);
         
         writer.travel(writer.x(), writer.y()-m_perimeter_width); // cooling and loading were done a bit down the road
         toolchange_Wipe(writer, cleaning_box, wipe_volume);     // Wipe the newly loaded filament until the end of the assigned wipe area.
-// dribbling
-				if ((m_semm == true) && (m_dribbling_enabled == true)) {				        
-        	writer.set_extruder_temp(m_is_first_layer ? m_filpar[tool].first_layer_temperature : m_filpar[tool].temperature, false);
-        }
-// dribbling				        	
         ++ m_num_tool_changes;
     } else
         toolchange_Unload(writer, cleaning_box, m_filpar[m_current_tool].material, m_filpar[m_current_tool].temperature);
@@ -810,13 +808,20 @@ WipeTower::ToolChangeResult WipeTower::tool_change(unsigned int tool, bool last_
 
 	if (m_set_extruder_trimpot)
 		writer.set_extruder_trimpot(550);    // Reset the extruder current to a normal value.
+	
 	writer.speed_override_restore();
-    writer.feedrate(6000)
+  writer.feedrate(6000)
           .flush_planner_queue()
           .reset_extruder()
           .append("; CP TOOLCHANGE END\n"
                   ";------------------\n"
                   "\n\n");
+// dribbling
+				if ((m_semm == true) && (m_dribbling_enabled == true)) {
+					writer.append(";------ SET AGAIN CORRECT LAYER TEMP --------------\n");				        
+        	writer.set_extruder_temp(m_is_first_layer ? m_filpar[m_current_tool].first_layer_temperature : m_filpar[m_current_tool].temperature, false);
+        }	
+// dribbling ***
 
     // Ask our writer about how much material was consumed:
     if (m_current_tool < m_used_filament_length.size())
