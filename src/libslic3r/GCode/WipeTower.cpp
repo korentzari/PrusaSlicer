@@ -766,14 +766,21 @@ WipeTower::ToolChangeResult WipeTower::tool_change(size_t tool, bool last_in_lay
                         common_temp_H = m_filpar[tool].filament_mintemp;
                      }					
                 }
-				
+
+			if ((m_semm == true) && (m_dribbling_enabled == true)) {
+			    	writer.append(";--------------------\n");					
+				writer.comment_with_value("NOWAIT Common flushing temperature =", common_temp_H);
+				writer.set_extruder_temp(common_temp_H, false);
+				writer.append(";--------------------\n");
+			}
+	    
 				toolchange_Change(writer, tool, m_filpar[tool].material); // Change the tool, set a speed override for soluble and flex materials.
 				
 // dribbling				
 				if ((m_semm == true) && (m_dribbling_enabled == true)) {
     	    writer.append(";--------------------\n"
 		    		            "; SET COMMON TEMPERATURE to use between two different materials\n");					
-					writer.comment_with_value(" Common flushing temperature =", common_temp_H);
+					writer.comment_with_value("WAIT Common flushing temperature =", common_temp_H);
 					writer.set_extruder_temp(common_temp_H, true);
 					writer.append(";--------------------\n");
 			  }        
